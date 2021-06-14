@@ -6,12 +6,14 @@ import store from "./store";
 import VueMoment from "vue-moment";
 import moment from "moment-timezone";
 import { auth } from "./firebase";
+import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.config.productionTip = false;
 
-// moment().tz("West/Africa").format();
 moment.tz.guess();
 Vue.use(VueMoment, { moment });
+
+V
 
 let user;
 let app;

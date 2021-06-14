@@ -30,8 +30,13 @@
               <template v-slot:[`item.date`]="{ item }">
                 <span>{{
                   item.date
-                    | moment("ddd, MMMM  YYYY, h:mm:ss a", )
-                    
+                    | moment(
+                      "ddd, MMMM  YYYY, h:mm:ss a",
+                      moment
+                        .parseZone("2016-05-03T22:15:01+02:00")
+                        .local(true)
+                        .format()
+                    )
                 }}</span>
               </template>
               <template v-slot:[`item.latlon`]="{ item }">
@@ -116,7 +121,6 @@ export default {
     EmergencyService.getAll().on("value", this.onDataChange);
   },
   methods: {
-   
     onDataChange(items) {
       let _emergencies = [];
 

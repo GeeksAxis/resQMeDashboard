@@ -30,7 +30,7 @@
               <template v-slot:[`item.date`]="{ item }">
                 <span>{{
                   item.date
-                    | moment("ddd, MMMM  YYYY, h:mm:ss a", )
+                    | moment("ddd, MMMM  YYYY, h:mm:ss a", )tz.guess();
                     
                 }}</span>
               </template>
@@ -116,7 +116,6 @@ export default {
     EmergencyService.getAll().on("value", this.onDataChange);
   },
   methods: {
-   
     onDataChange(items) {
       let _emergencies = [];
 

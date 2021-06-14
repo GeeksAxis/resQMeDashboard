@@ -116,7 +116,6 @@ export default {
     EmergencyService.getAll().on("value", this.onDataChange);
   },
   methods: {
-   
     onDataChange(items) {
       let _emergencies = [];
 

@@ -3,15 +3,27 @@ import App from "./App.vue";
 import router from "./router";
 import vuetify from "./plugins/vuetify";
 import store from "./store";
-import VueMoment from "vue-moment";
-import moment from "moment-timezone";
+
+
+
+
 import { auth } from "./firebase";
+import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.config.productionTip = false;
 
-// moment().tz("West/Africa").format();
-moment.tz.guess();
-Vue.use(VueMoment, { moment });
+
+Vue.use(require("vue-moment")  { 
+
+
+);
+Vue.use(VueGoogleMaps, {
+  load: {
+    key: "AIzaSyD_amxYnSPPmZM6c61QbLU5X19B4EI6hIA",
+  },
+  installComponents: true,
+});
+
 
 let user;
 let app;

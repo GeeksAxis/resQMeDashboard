@@ -28,11 +28,11 @@
               :search="search"
             >
               <template v-slot:[`item.date`]="{ item }">
-                <span>{{
+            
+                <!-- <span>{{
                   item.date
-                    | moment("ddd, MMMM  YYYY, h:mm:ss a", )
-                    
-                }}</span>
+                    | moment("from", "now")
+                }}</span> -->
               </template>
               <template v-slot:[`item.latlon`]="{ item }">
                 <div>
@@ -80,9 +80,13 @@
 </template>
 
 <script>
+import { dateFilter } from "vue-date-fns"
 import LeafletMap from "../components/leaflet.vue";
 import EmergencyService from "../Services/emergencyServices";
 export default {
+   filters: {
+        date: dateFilter
+    },
   name: "GoogleMap",
   components: {
     LeafletMap,
@@ -116,7 +120,6 @@ export default {
     EmergencyService.getAll().on("value", this.onDataChange);
   },
   methods: {
-   
     onDataChange(items) {
       let _emergencies = [];
 

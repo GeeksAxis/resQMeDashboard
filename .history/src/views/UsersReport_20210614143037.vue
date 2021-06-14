@@ -22,17 +22,16 @@
             </v-card-title>
             <v-data-table
               disable-sort
-              no-results-text="something went wrong"
+              loading-text="loading data"
               :headers="headers"
               :items="ResqMeItems"
               :search="search"
             >
               <template v-slot:[`item.date`]="{ item }">
-                <span>{{
-                  item.date
-                    | moment("ddd, MMMM  YYYY, h:mm:ss a", )
-                    
-                }}</span>
+                <div>{{ item.date | dateFormat("dd, mm, yy", "HH:mm:ss") }}</div>
+                <!-- <span>{{
+                  item.date | moment("dddd, MMMM Do YYYY, h:mm:ss a")
+                }}</span> -->
               </template>
               <template v-slot:[`item.latlon`]="{ item }">
                 <div>
@@ -81,22 +80,18 @@
 
 <script>
 import LeafletMap from "../components/leaflet.vue";
-import EmergencyService from "../Services/emergencyServices";
+import ReportService from "../Services/reportService";
 export default {
-  name: "GoogleMap",
   components: {
     LeafletMap,
   },
-
   data() {
     return {
+      errorStr: null,
       currentEmergency: null,
       currentIndex: -1,
-
-      search: "",
       dialog: false,
-
-      currentPlace: null,
+      search: "",
       headers: [
         {
           text: "Reason",
@@ -104,6 +99,7 @@ export default {
           sortable: false,
           value: "reason",
         },
+
         { text: "Lat/Lng", value: "latlon" },
         { text: "State", value: "state" },
         { text: "Date", value: "date" },
@@ -113,17 +109,16 @@ export default {
     };
   },
   mounted() {
-    EmergencyService.getAll().on("value", this.onDataChange);
+    ReportService.getAll().on("value", this.onDataChange);
   },
   methods: {
-   
     onDataChange(items) {
-      let _emergencies = [];
+      let _reports = [];
 
       items.forEach((item) => {
         let key = item.key;
         let data = item.val();
-        _emergencies.push({
+        _reports.push({
           key: key,
           reason: data.reason,
           state: data.state,
@@ -133,7 +128,7 @@ export default {
         });
       });
 
-      this.ResqMeItems = _emergencies;
+      this.ResqMeItems = _reports;
     },
 
     refreshList() {
@@ -141,14 +136,20 @@ export default {
       this.currentIndex = -1;
     },
 
-    setActiveEmergency(_emergencies, index) {
+    setActiveEmergency(_reports, index) {
       this.currentEmergency = this.ResqMeItems;
       this.currentIndex = index;
     },
   },
 
   beforeDestroy() {
-    EmergencyService.getAll().off("value", this.onDataChange);
+    ReportService.getAll().off("value", this.onDataChange);
   },
 };
 </script>
+<style scoped>
+#mapContainer {
+  width: 80vw;
+  height: 100vh;
+}
+</style>

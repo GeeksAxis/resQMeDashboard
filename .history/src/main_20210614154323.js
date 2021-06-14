@@ -7,11 +7,13 @@ import VueMoment from "vue-moment";
 import moment from "moment-timezone";
 import { auth } from "./firebase";
 
+
 Vue.config.productionTip = false;
 
-// moment().tz("West/Africa").format();
 moment.tz.guess();
 Vue.use(VueMoment, { moment });
+
+
 
 let user;
 let app;

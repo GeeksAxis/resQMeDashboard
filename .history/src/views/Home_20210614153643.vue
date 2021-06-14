@@ -116,7 +116,7 @@ export default {
     EmergencyService.getAll().on("value", this.onDataChange);
   },
   methods: {
-   
+    var tz = moment.tz.guess(),
     onDataChange(items) {
       let _emergencies = [];
 

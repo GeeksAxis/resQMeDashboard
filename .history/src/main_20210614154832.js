@@ -9,8 +9,7 @@ import { auth } from "./firebase";
 
 Vue.config.productionTip = false;
 
-// moment().tz("West/Africa").format();
-moment.tz.guess();
+moment().tz("").format();
 Vue.use(VueMoment, { moment });
 
 let user;
