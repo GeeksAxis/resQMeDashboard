@@ -29,7 +29,7 @@
         <v-flex class="mt-4">
       
             <h1 class="h6-text mb-4 headline">ResqMedashboard</h1>
-          
+          >
         </v-flex>
       </v-layout>
       <v-divider></v-divider>

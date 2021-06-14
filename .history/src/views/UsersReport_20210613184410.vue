@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <h2 class="">DashBoard</h2>
+          <h2 >DashBoard</h2>
           <v-divider></v-divider>
           <v-divider></v-divider>
         </v-col>

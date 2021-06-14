@@ -90,7 +90,7 @@ export default {
 
       L.tileLayer(this.mapTileLayer, {
         attribution: this.mapAttribution,
-        maxZoom: 18,
+        maxZoom: ,
         minZoom: 10,
       }).addTo(this.map);
 

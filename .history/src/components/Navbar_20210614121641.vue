@@ -27,9 +27,9 @@
     <v-navigation-drawer v-model="drawer" dark app color="#212121" width="250">
       <v-layout column align-center>
         <v-flex class="mt-4">
-      
-            <h1 class="h6-text mb-4 headline">ResqMedashboard</h1>
-          
+          <router-link t>
+            <h1 class="h6-text mb-4 headline">ResqMedashboard</h1></router-link
+          >
         </v-flex>
       </v-layout>
       <v-divider></v-divider>
