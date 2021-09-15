@@ -1,129 +1,152 @@
 <template>
-  <v-app class="custom__bg">
-    <v-container fill-height>
-      <v-row justify="center" align="center">
-        <div class="d-flex justify-center align-center"></div>
-        <v-col cols="12" md="12">
-          <div class="d-flex justify-center align-center">
-            <v-card flat>
-              <v-card
-                width="365"
-                elevation="5"
-                style="border-radius: 10px"
-                class="mt-2"
-              >
-                <v-card-text>
-                  <v-form @submit.prevent ref="form">
-                    <v-col cols="12" md="12" class="py-0 px-2">
-                      <v-text-field
-                        outlined
-                        class="custom__field"
-                        append-icon="mdi-email"
-                        color="#ef6c00"
-                        placeholder="Email"
-                        :rules="[rules.required, rules.email]"
-                        v-model="email"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" md="12" class="py-0 px-2 ">
-                      <v-text-field
-                        outlined
-                        placeholder="Password"
-                        :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                        :type="showPassword ? 'text' : 'password'"
-                        v-model="password"
-                        color="#ef6c00"
-                        :rules="[rules.required, rules.password]"
-                        class="custom__field"
-                        @click:append="showPassword = !showPassword"
-                        hide-details="auto"
-                      >
-                      </v-text-field>
-                    </v-col>
-                  </v-form>
+  <v-app class="">
+    <v-row>
+      <v-col cols="12" md="6">
+        <div>
+      
+            <v-img src="../assets/cp.svg" />
+          
+        </div>
+      </v-col>
+      <v-col cols="12" md="6">
+        <v-container fill-height>
+          <v-card flat width="500">
+            <div class="d-flex justify-center align-center">
+              <v-card-text>
+                <div>
+                  <p class="text-h4 mx-3 font-weight-bold">Log In</p>
+                </div>
+                <div>
+                  <p class="text-h6 mx-3 font-weight-regular grey--text">Access Your Account</p>
+                </div>
 
-                  <v-col cols="12" md="12" class="px-2 ">
+                <v-form v-model="form" ref="form">
+                  <v-col cols="12" md="12">
+                    <span class="text-body-1">Email Address</span>
+                    <v-text-field
+                      outlined
+                      placeholder="Enter Your Email Address"
+                      color="#2A4F66"
+                      :rules="[rules.email, rules.required]"
+                      type="email"
+                      class="mt-2"
+                      v-model="email"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="12" class="py-0">
+                    <span class="text-body-1">Password</span>
+                    <v-text-field
+                      outlined
+                      :type="showPassword ? 'text' : 'password'"
+                      class="custom__field mt-2"
+                      @click:append="showPassword = !showPassword"
+                      color="#2A4F66"
+                      :rules="[rules.password, rules.required]"
+                      append-icon="mdi-eye"
+                      placeholder="Enter Your Password"
+                      v-model="password"
+                    ></v-text-field>
+                  </v-col>
+                </v-form>
+
+                <v-col cols="12" md="12">
+                  <div>
                     <v-btn
                       block
                       large
-                      :loading="loading"
-                      :disabled="loading"
-                      @click="(loader = 'loading'), logIn()"
-                      height="50"
-                      color="#ef6c00"
-                      class="white--text text-capitalize action__buttom"
+                      color="#0277BD"
+                     
+                     @click="signIn() "
+                      class="white--text text-capitalize px-8 mt-1"
                       elevation="3"
                     >
                       Login</v-btn
                     >
-                  </v-col>
-                </v-card-text>
-              </v-card>
-            </v-card>
-          </div>
-        </v-col>
-      </v-row>
-    </v-container>
+                  </div>
+                </v-col>
+                <v-col cols="12" md="12">
+                  <div>
+                    <v-btn color="#0277BD" small text>Forgot Password</v-btn>
+                  </div>
+                </v-col>
+              </v-card-text>
+            </div>
+          </v-card>
+
+          <v-snackbar
+            bottom
+            color="warning"
+            timeout="5000"
+            v-model="signInMetaData.signInErrorSnackbar"
+          >
+            {{ signInMetaData.signInErrorPayload }}
+          </v-snackbar>
+        </v-container>
+      </v-col>
+    </v-row>
   </v-app>
 </template>
+
 <script>
 export default {
+  components: {
+   
+  },
   data: () => ({
-    loader: null,
-    loading: false,
-    showPassword: "",
+    icon: ["mdi-facebook", "mdi-twitter", "mdi-google"],
     email: "",
-
     password: "",
+    showPassword: "",
+    form: false,
     rules: {
-      required: (v) => !!v || "Field is required",
-      counter: (v) => (v && v.length >= 5) || "Minimum length is 5 characters",
-      email: (value) => {
-        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return pattern.test(value) || "Invalid e-mail.";
-      },
+      email: (v) => !!(v || "").match(/@/) || "Please enter a valid email",
+      length: (len) => (v) =>
+        (v || "").length >= len || `Invalid character length, required ${len}`,
+      required: (v) => !!v || "This field is required",
       password: (value) =>
         (value && value.length >= 6) || "Minimum length is 6 characters",
     },
   }),
   methods: {
-    logIn() {
+    signIn() {
       this.$store.dispatch("login", {
         email: this.email,
         password: this.password,
       });
-      this.loading = true
-       setTimeout(() => {
+      this.loading = true;
+      setTimeout(() => {
         this.loading = false;
       }, 3000);
     },
   },
+  computed: {
+    signInMetaData() {
+      return [];
+    },
+  },
 };
 </script>
+
 <style scoped>
+.custom_img{
+   width:100%; 
+    height:100%; 
+}
 .custom__bg {
-  background: white;
+  background: #fafafa;
 }
-
-.custom__color {
-  box-shadow: 0 5px 15px 0 rgba(32, 137, 214, 0.4);
+.custom__text {
+  font-size: 12px;
+  text-decoration-line: underline;
+  color: blue;
+  
 }
-
-.action__buttom {
-  border-radius: 10px;
-  color: #ef6c00;
-  box-shadow: 0 5px 15px 0 rgba(32, 137, 214, 0.4);
-}
-.custom__field {
-  border-radius: 10px;
-}
-.custom__title {
-  font-size: 30px;
-
-  color: #000000;
-}
-.custom__sub {
-  color: #000000;
-  width: 249px;
+.custom__t {
+  font-size: 11px;
 }
 </style>
+  // methods: {
+  //   logIn() {
+  //    
+  // },
+
