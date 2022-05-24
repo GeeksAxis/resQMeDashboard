@@ -6,8 +6,11 @@ import store from "./store";
 import VueMoment from "vue-moment";
 import moment from "moment-timezone";
 import { auth } from "./firebase";
+import VueGeolocation from 'vue-browser-geolocation';
+
 
 Vue.config.productionTip = false;
+Vue.use(VueGeolocation);
 
 // moment().tz("West/Africa").format();
 moment.tz.guess();

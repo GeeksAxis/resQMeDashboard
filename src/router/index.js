@@ -18,11 +18,71 @@ const routes = [
   {
     path: "/about",
     name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+      import( "../views/About.vue"),
+  },
+  {
+    path: "/analytics",
+    component: () =>
+      import( "../views/Analytics.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
+    path: "/dangerzones",
+    component: () =>
+      import( "../views/About.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
+    path: "/report",
+    component: () =>
+      import( "../views/About.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
+    path: "/report",
+    component: () =>
+      import( "../views/About.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
+    path: "/accident",
+    component: () =>
+      import( "../views/About.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
+    path: "/robbery",
+    component: () =>
+      import( "../views/About.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
+    path: "/fire",
+    component: () =>
+      import( "../views/About.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
   },
   {
     path: "/login",
@@ -32,6 +92,7 @@ const routes = [
     },
 
     component: () => import("../views/login.vue"),
+    
   },
  
   {
@@ -59,7 +120,8 @@ router.beforeEach((to, from, next) => {
   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)
 
   if (requiresAuth && !auth.currentUser) {
-    next('/login')
+    // next('/login')
+    next()
   } else {
     next()
   }

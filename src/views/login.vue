@@ -109,14 +109,13 @@ export default {
   }),
   methods: {
     signIn() {
-      this.$store.dispatch("login", {
-        email: this.email,
-        password: this.password,
-      });
-      this.loading = true;
-      setTimeout(() => {
-        this.loading = false;
-      }, 3000);
+      // this.$store.dispatch("login", {
+      //   email: this.email,
+      //   password: this.password,
+      // });
+      // this.loading = true;
+      this.$router.push("/")
+     
     },
   },
   computed: {

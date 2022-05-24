@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app  >
     <Navbar v-if="$route.meta.showHeader == true" />
     <v-main>
       <router-view />
@@ -24,6 +24,14 @@ export default {
     showNav() {
       return Object.keys(this.userProfile).length > 1;
     },
+   isDark(){ return (this.$vuetify.theme.dark) ? 'dark' : 'light' }
+
   },
 };
 </script>
+
+<style scoped>
+.bg {
+  background: #E5E5E5;
+}
+</style>
