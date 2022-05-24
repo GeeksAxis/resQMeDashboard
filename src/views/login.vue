@@ -26,7 +26,7 @@
                     <v-text-field
                       outlined
                       placeholder="Enter Your Email Address"
-                      color="#2A4F66"
+                      color="primary"
                       :rules="[rules.email, rules.required]"
                       type="email"
                       class="mt-2"
@@ -40,7 +40,7 @@
                       :type="showPassword ? 'text' : 'password'"
                       class="custom__field mt-2"
                       @click:append="showPassword = !showPassword"
-                      color="#2A4F66"
+                      color="primary"
                       :rules="[rules.password, rules.required]"
                       append-icon="mdi-eye"
                       placeholder="Enter Your Password"
@@ -54,7 +54,7 @@
                     <v-btn
                       block
                       large
-                      color="#0277BD"
+                      color="primarys"
                      
                      @click="signIn() "
                       class="white--text text-capitalize px-8 mt-1"
@@ -66,7 +66,7 @@
                 </v-col>
                 <v-col cols="12" md="12">
                   <div>
-                    <v-btn color="#0277BD" small text>Forgot Password</v-btn>
+                    <v-btn color="primary" small text>Forgot Password</v-btn>
                   </div>
                 </v-col>
               </v-card-text>
