@@ -51,22 +51,22 @@
                             </div>
                             <div class="d-flex align-center mt-8">
                                 <div>
-                                    <span>lorem</span>
+                                    <span>Time</span>
                                     <div class="d-flex align-center mt-4">
                                         <v-icon large>mdi-clock</v-icon>
                                         <div class="ml-2 text-h6">
-                                            12:30:43
+                                            {{ new Date() | moment(" h:mm:ss a",)}}
                                         </div>
 
                                     </div>
                                 </div>
                                 <v-spacer></v-spacer>
                                 <div>
-                                    <span>lorem</span>
+                                    <span>Date</span>
                                     <div class="d-flex align-center mt-4">
-                                        <v-icon large>mdi-calendar</v-icon>
-                                        <div class="ml-2 text-h6">
-                                            12:30:43
+                                        <v-icon large left>mdi-calendar</v-icon>
+                                        <div class=" text-h6">
+                                         {{ new Date() | moment("ddd, MMMM YYYY")}}
                                         </div>
 
                                     </div>
@@ -118,23 +118,20 @@
                                         Lorem ipsum dolor sit amet consectetur adipisicing elit <br> Fuga beatae earum
                                         reprehenderit debiti
                                     </div>
+                                     <div class="mt-2">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit <br> Fuga beatae earum
+                                        reprehenderit debiti
+                                    </div>
+                                     <div class="mt-2">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit <br> Fuga beatae earum
+                                        reprehenderit debiti
+                                    </div>
+                                    
                                 </v-card-text>
                             </v-card>
 
                         </v-col>
-                        <v-col cols="12">
-                            <v-card flat color="background">
-                                <v-card-text>
-                                    <div class="primary--text font-weight-bold text-center">
-                                        Lorem ipsum
-                                    </div>
-                                    <div class="mt-2">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit
-                                    </div>
-                                </v-card-text>
-                            </v-card>
-
-                        </v-col>
+                        
 
                         <v-col cols="12">
                             <v-card flat color="background">

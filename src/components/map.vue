@@ -8,7 +8,6 @@
 
 <script>
 import L from "leaflet";
-import HeatmapOverlay from 'heatmap.js/plugins/leaflet-heatmap'
 
 import "leaflet/dist/leaflet.css";
 delete L.Icon.Default.prototype._getIconUrl;
@@ -19,9 +18,7 @@ L.Icon.Default.mergeOptions({
 });
 export default {
   props: {
-    data: {
-      type: Array,
-    },
+   
     latitude: {
       type: [String, Number],
     },
@@ -74,47 +71,24 @@ export default {
     },
     buildMap() {
     
-       let lat = 10.5271238;
-       let lon = 7.4485181;
+       let lat = this.latitude;
+       let lng = this.longitude;
 
-        var testData = {
-          max: 10,
-          data: this.data
-        }
+        
        
       
       this.map = L.map(this.mapId, {
         zoomControl: false,
-      }).setView([lat, lon], 15);
+      }).setView([lat, lng], 15);
       this.map.scrollWheelZoom.disable();
-       var cfg = {
-          'radius': 0.01,
-          'maxOpacity': 0.8,
-          'scaleRadius': true,
-          'useLocalExtrema': true,
-          latField:'lat',
-          lngField:'lng',
-          valueField:'count'
-        }
-        this.heatmapLayer = new HeatmapOverlay(cfg);
-         this.heatmapLayer.addTo(this.map);
-        this.heatmapLayer.setData(testData);
-         let baseLayer = L.tileLayer(
-          'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution:'Haut-Gis-Org © OpenStreetMap'
-          }
-        )
+     
       L.control
         .zoom({
           position: "topleft",
         })
         .addTo(this.map);
-         let baseLayers = {
-          'heatmapLayer': this.heatmapLayer,
-          'OpenStreetMap': baseLayer
-        }
+         
       
-        L.control.layers(baseLayers).addTo(this.map)
       L.tileLayer(this.mapTileLayer, {
         attribution: this.mapAttribution,
         maxZoom: 18,
@@ -122,13 +96,12 @@ export default {
       }).addTo(this.map);
       let marker;
       
-      for(let i=0; i<this.data.length;i++){
         
-       marker= L.marker([this.data[i].lat, this.data[i].lng], {
-        title: `lat: ${this.data[i].lat} | lon: ${this.data[i].lng}`,
+       marker= L.marker([lat, lng], {
+        title: `lat: ${lat} | lon: ${lng}`,
         riseOnHover: true,
       }).bindPopup('T').addTo(this.map);
-      }
+      
       
       if (this.popUpData !== null) {
         let finalPopUpData;
