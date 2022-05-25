@@ -1,6 +1,6 @@
 import firebase from "../firebase";
 
-const db = firebase.ref("/all_emergencies");
+const db = firebase.ref();
 
 class EmergencyService {
   getAll() {

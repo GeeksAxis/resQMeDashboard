@@ -7,6 +7,13 @@ import VueMoment from "vue-moment";
 import moment from "moment-timezone";
 import { auth } from "./firebase";
 import VueGeolocation from 'vue-browser-geolocation';
+import { LMap, LTileLayer, LMarker } from 'vue2-leaflet';
+import 'leaflet/dist/leaflet.css';
+
+Vue.component('l-map', LMap);
+Vue.component('l-tile-layer', LTileLayer);
+Vue.component('l-marker', LMarker);
+
 
 
 Vue.config.productionTip = false;

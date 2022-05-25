@@ -33,7 +33,7 @@ const routes = [
   {
     path: "/dangerzones",
     component: () =>
-      import( "../views/About.vue"),
+      import( "../views/Danger.vue"),
       meta: {
         showHeader: true,
         requiresAuth: true
@@ -42,25 +42,17 @@ const routes = [
   {
     path: "/report",
     component: () =>
-      import( "../views/About.vue"),
+      import( "../views/Report.vue"),
       meta: {
         showHeader: true,
         requiresAuth: true
       },
   },
-  {
-    path: "/report",
-    component: () =>
-      import( "../views/About.vue"),
-      meta: {
-        showHeader: true,
-        requiresAuth: true
-      },
-  },
+  
   {
     path: "/accident",
     component: () =>
-      import( "../views/About.vue"),
+      import( "../views/Accident.vue"),
       meta: {
         showHeader: true,
         requiresAuth: true
@@ -69,7 +61,19 @@ const routes = [
   {
     path: "/robbery",
     component: () =>
-      import( "../views/About.vue"),
+      import( "../views/Robery.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
+    path: "/map",
+    name: "map",
+    props: true ,
+
+    component: () =>
+      import( "../views/Map.vue"),
       meta: {
         showHeader: true,
         requiresAuth: true
@@ -78,7 +82,7 @@ const routes = [
   {
     path: "/fire",
     component: () =>
-      import( "../views/About.vue"),
+      import( "../views/Fire.vue"),
       meta: {
         showHeader: true,
         requiresAuth: true

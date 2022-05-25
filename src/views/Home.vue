@@ -18,8 +18,27 @@
               <v-card-title>
 
               </v-card-title>
-              <v-data-table disable-sort no-results-text="something went wrong" :headers="headers" :items="data"
-                :search="search" color="background" class="data_table">
+              <v-data-table disable-sort no-results-text="something went wrong" :headers="headers" :items="ResqMeItems"
+                @click:row="handleClick" :search="search" color="background" class="data_table">
+
+                <template v-slot:top>
+                  <v-dialog v-model="dialog" hide-overlay fullscreen>
+
+                    <v-card class="pa-0" color="white">
+                      <v-card-actions class="pa-0">
+                        <v-spacer></v-spacer>
+
+                        <v-btn color="primary" icon @click="close()">
+                          <v-icon>mdi-close</v-icon>
+                        </v-btn>
+                      </v-card-actions>
+
+                      <v-card>
+                        <leaflet-map></leaflet-map>
+                      </v-card>
+                    </v-card>
+                  </v-dialog>
+                </template>
                 <template v-slot:[`item.date`]="{ item }">
                   <span>{{
                       item.date
@@ -27,54 +46,45 @@
                   
                   }}</span>
                 </template>
-                <template v-slot:[`item.type`]="{ item }">
-                  <div v-if="item.type === 'Fire'">
-                    <v-chip color="#DC3545">{{ item.type }}</v-chip>
+                <template v-slot:[`item.reason`]="{ item }">
+                  <div v-if="item.reason === 'Fire Accident'">
+                    <v-chip color="#DC3545">{{ item.reason }}</v-chip>
                   </div>
-                  <div v-else-if="item.type === 'Accident'">
-                    <v-chip color="#FF0000">{{ item.type }}</v-chip>
+                  <div v-else-if="item.reason === 'Road Accident'">
+                    <v-chip color="#FF0000">{{ item.reason }}</v-chip>
                   </div>
-                  <div v-else-if="item.type === 'Robery'">
-                    <v-chip color="#5E81F4">{{ item.type }}</v-chip>
+                  <div v-else-if="item.reason === 'Bandits'">
+                    <v-chip color="#E57373">{{ item.reason }}</v-chip>
+                  </div>
+
+                  <div v-else-if="item.reason === 'House Robbery'">
+                    <v-chip color="#5E81F4">{{ item.reason }}</v-chip>
+                  </div>
+                  <div v-else>
+                    <v-chip color="#D81B60">{{ item.reason }}</v-chip>
                   </div>
 
                 </template>
                 <template v-slot:[`item.latlon`]="{ item }">
                   <div>
-                    <span>{{ item.latlon }} </span>
-                    <!-- <span>{{ item.lng }} </span> -->
+                    <span>{{ item.lat }} </span>
+                    <span>{{ item.lng }} </span>
                   </div>
                 </template>
-                <template v-slot:[`item.map`]="{ item }">
-                  <v-dialog v-model="dialog" hide-overlay fullscreen transition="dialog-top-transition">
-                    <template v-slot:activator="{ on, attrs }">
-                      <v-btn icon v-bind="attrs" v-on="on">
-                        <v-icon color="#ef6c00">mdi-google-maps</v-icon>
-                      </v-btn>
-                    </template>
-                    <v-card class="pa-0">
-                      <v-card-actions class="pa-0">
-                        <v-btn color="#ef6c00" text @click="dialog = false">
-                          close
-                        </v-btn>
-                        <v-spacer></v-spacer>
-                      </v-card-actions>
-
-                      <v-card-text class="pa-0">
-                        <div>
-                          <leaflet-map :latitude="item.lat" :longitude="item.lng"></leaflet-map>
-                        </div>
-                      </v-card-text>
-                    </v-card>
-                  </v-dialog>
+                <template v-slot:[`item.map`]="{}">
+                  <v-btn icon @click="myitem(item)">
+                    <v-icon color="primary">mdi-google-maps</v-icon>
+                  </v-btn>
                 </template>
+
               </v-data-table>
             </v-card>
           </v-col>
         </v-col>
         <v-col v-else>
           <v-card>
-            <leaflet-map :latitude="10.609319" :longitude="7.429504"></leaflet-map>
+            <leaflet-map :data="cord"  >
+            </leaflet-map>
           </v-card>
         </v-col>
       </v-row>
@@ -97,8 +107,14 @@ export default {
       currentIndex: -1,
       switch1: false,
       search: "",
+      coordinate: [10.609319, 7.429504],
       dialog: false,
+      cord: [
+
+      ],
       coordinates: null,
+      editedIndex: -1,
+      editedItem: {},
       data: [
         {
           reason: 'Arlene McCoy', date: 'September 9, 2013', latlon: 111144333, type: 'Fire'
@@ -113,17 +129,12 @@ export default {
 
       currentPlace: null,
       headers: [
-        {
-          text: "Name",
-          align: "start",
-          sortable: false,
-          value: "reason",
-        },
-        { text: "Date", value: "date", sortable: false, },
-        { text: "Lat/Lng", value: "latlon", sortable: false, },
-        { text: "Type", value: "type", sortable: false, },
 
-        // { text: "Location", value: "map", sortable: false, },
+        { text: "Date", value: "date", sortable: false, align: "start", },
+        { text: "Lat/Lng", value: "latlon", sortable: false, },
+        { text: "Type", value: "reason", sortable: false, },
+
+        { text: "Location", value: "map", sortable: false, },
       ],
       ResqMeItems: [],
     };
@@ -131,11 +142,15 @@ export default {
   mounted() {
     EmergencyService.getAll().on("value", this.onDataChange);
   },
-  methods: {
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
 
+  },
+  methods: {
     onDataChange(items) {
       let _emergencies = [];
-
       items.forEach((item) => {
         let key = item.key;
         let data = item.val();
@@ -145,21 +160,42 @@ export default {
           state: data.state,
           lat: data.lat,
           lng: data.lng,
-          date: data.date_time,
+          date: data.date,
         });
+        const dt = {
+          lat: data.lat,
+          lng: data.lng,
+          count: 1,
+        };
+        this.cord.push(dt)
       });
 
       this.ResqMeItems = _emergencies;
     },
-
+    myitem(item) {
+      this.editedIndex = this.ResqMeItems.indexOf(item);
+      this.editedItem = Object.assign({}, item);
+      this.dialog = true;
+    },
     refreshList() {
       this.currentEmergency = null;
       this.currentIndex = -1;
+    },
+    handleClick(row) {
+      console.log(row)
+
     },
 
     setActiveEmergency(_emergencies, index) {
       this.currentEmergency = this.ResqMeItems;
       this.currentIndex = index;
+    },
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({});
+        this.editedIndex = -1;
+      });
     },
   },
   created() {
