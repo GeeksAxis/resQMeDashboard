@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card class="leaflet-map-container">
-      <div :id="mapId" :style="{ height: mapHeight + 'px', zIndex: 0 }"></div>
+      <div :id="mapId" style=" height:100vh "></div>
     </v-card>
   </div>
 </template>
@@ -13,9 +13,9 @@ import HeatmapOverlay from 'heatmap.js/plugins/leaflet-heatmap'
 import "leaflet/dist/leaflet.css";
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
-    iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
-    iconUrl: require('leaflet/dist/images/marker-icon.png'),
-    shadowUrl: require('leaflet/dist/images/marker-shadow.png')
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png')
 });
 export default {
   props: {
@@ -73,63 +73,80 @@ export default {
       }
     },
     buildMap() {
-    
-       let lat = 10.5271238;
-       let lon = 7.4485181;
 
-        var testData = {
-          max: 10,
-          data: this.data
-        }
-       
-      
+      let lat = 9.081999;
+      let lon = 8.675277000000051;
+
+      var testData = {
+        max: 20,
+        data: [{ lat: 10.501518, lng: 7.44084, count: 1 },
+        { lat: 10.619551, lng: 7.231577, count: 1 },
+        { lat: 11.280164, lng: 7.417857, count: 1 },
+        { lat: 10.632139, lng: 7.470593, count: 1 },
+        { lat: 10.694601, lng: 7.325346, count: 1 },
+        { lat: 10.52858, lng: 7.386575, count: 1 },
+        { lat: 10.142671, lng: 7.788877, count: 1 },
+        { lat: 10.634572, lng: 7.352669, count: 1 },
+        { lat: 10.5713, lng: 6.878103, count: 1 },
+        { lat: 10.521587, lng: 7.023215, count: 1 },
+        { lat: 11.034571, lng: 7.675574, count: 1 },
+        
+
+
+
+        ]
+
+
+
+      }
+
+
       this.map = L.map(this.mapId, {
         zoomControl: false,
-      }).setView([lat, lon], 15);
+      }).setView([lat, lon], 7);
       this.map.scrollWheelZoom.disable();
-       var cfg = {
-          'radius': 0.01,
-          'maxOpacity': 0.8,
-          'scaleRadius': true,
-          'useLocalExtrema': true,
-          latField:'lat',
-          lngField:'lng',
-          valueField:'count'
-        }
-        this.heatmapLayer = new HeatmapOverlay(cfg);
-         this.heatmapLayer.addTo(this.map);
-        this.heatmapLayer.setData(testData);
-         let baseLayer = L.tileLayer(
-          'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution:'Haut-Gis-Org © OpenStreetMap'
-          }
-        )
+      var cfg = {
+        'radius': 0.15,
+        'maxOpacity': 0.8,
+        'scaleRadius': true,
+        'useLocalExtrema': true,
+        latField: 'lat',
+        lngField: 'lng',
+        valueField: 'count'
+      }
+      this.heatmapLayer = new HeatmapOverlay(cfg);
+      this.heatmapLayer.addTo(this.map);
+      this.heatmapLayer.setData(testData);
+      let baseLayer = L.tileLayer(
+        'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Haut-Gis-Org © OpenStreetMap'
+      }
+      )
       L.control
         .zoom({
           position: "topleft",
         })
         .addTo(this.map);
-         let baseLayers = {
-          'heatmapLayer': this.heatmapLayer,
-          'OpenStreetMap': baseLayer
-        }
-      
-        L.control.layers(baseLayers).addTo(this.map)
+      let baseLayers = {
+        'heatmapLayer': this.heatmapLayer,
+        'OpenStreetMap': baseLayer
+      }
+
+      L.control.layers(baseLayers).addTo(this.map)
       L.tileLayer(this.mapTileLayer, {
         attribution: this.mapAttribution,
-        maxZoom: 18,
-        minZoom: 10,
+        
       }).addTo(this.map);
       let marker;
-      
-      for(let i=0; i<this.data.length;i++){
-        
-       marker= L.marker([this.data[i].lat, this.data[i].lng], {
-        title: `lat: ${this.data[i].lat} | lon: ${this.data[i].lng}`,
-        riseOnHover: true,
-      }).bindPopup('T').addTo(this.map);
+
+      for (let i = 0; i < this.data.length; i++) {
+
+        marker = L.marker([this.data[i].lat, this.data[i].lng], {
+          title: `lat: ${this.data[i].lat} | lon: ${this.data[i].lng}`,
+          riseOnHover: true,
+        }).bindPopup('T').addTo(this.map);
       }
-      
+
       if (this.popUpData !== null) {
         let finalPopUpData;
         if (this.popUpIsJson) {

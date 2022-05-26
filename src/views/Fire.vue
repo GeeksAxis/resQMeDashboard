@@ -1,3 +1,4 @@
+
 <template>
   <v-app class="bg">
     <v-container>
@@ -28,13 +29,13 @@
                       <v-card-actions class="pa-0">
                         <v-spacer></v-spacer>
 
-                        <v-btn color="red"  icon @click="close()">
+                        <v-btn color="red" icon @click="close()">
                           <v-icon large>mdi-close</v-icon>
                         </v-btn>
                       </v-card-actions>
 
                       <v-card>
-                        <leaflet-map :data="editedItem"></leaflet-map>
+                        <Map :latitude="lat" :longitude="lng" />
                       </v-card>
                     </v-card>
                   </v-dialog>
@@ -71,7 +72,7 @@
                     <span>{{ item.lng }} </span>
                   </div>
                 </template>
-                <template v-slot:[`item.map`]="{}">
+                <template v-slot:[`item.map`]="{ item }">
                   <v-btn icon @click="myitem(item)">
                     <v-icon color="primary">mdi-google-maps</v-icon>
                   </v-btn>
@@ -83,7 +84,7 @@
         </v-col>
         <v-col v-else>
           <v-card>
-            <leaflet-map :data="cord"  >
+            <leaflet-map :data="cord" :popUpData="cord">
             </leaflet-map>
           </v-card>
         </v-col>
@@ -95,10 +96,12 @@
 <script>
 import LeafletMap from "../components/leaflet.vue";
 import EmergencyService from "../Services/emergencyServices";
+import Map from '../components/map.vue'
 export default {
   name: "GoogleMap",
   components: {
     LeafletMap,
+    Map
   },
 
   data() {
@@ -113,6 +116,8 @@ export default {
       coordinates: null,
       editedIndex: -1,
       editedItem: {},
+      lat: null,
+      lng: null,
       data: [
         {
           reason: 'Arlene McCoy', date: 'September 9, 2013', latlon: 111144333, type: 'Fire'
@@ -153,7 +158,7 @@ export default {
         let key = item.key;
         let data = item.val();
         if(data.reason === 'Fire Accident') {
-         _emergencies.push({
+          _emergencies.unshift({
           key: key,
           reason: data.reason,
           state: data.state,
@@ -176,20 +181,17 @@ export default {
       this.editedIndex = this.ResqMeItems.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
-      const dt = {
-          lat: item.lat,
-          lng: item.lng,
-          count: 1,
-        };
-        this.editedItem = dt;
-        console.log(">>>", this.editedItem)
+      this.lat = item.lat;
+      this.lng = item.lng
+
     },
     refreshList() {
       this.currentEmergency = null;
       this.currentIndex = -1;
     },
     handleClick(row) {
-      console.log(row)
+
+      console.log("//", row)
 
     },
 
@@ -205,16 +207,7 @@ export default {
       });
     },
   },
-  created() {
 
-
-
-    this.$getLocation()
-      .then(coordinates => {
-        this.coordinates
-        console.log(coordinates.lat);
-      });
-  },
 
   beforeDestroy() {
     EmergencyService.getAll().off("value", this.onDataChange);
