@@ -68,6 +68,15 @@ const routes = [
       },
   },
   {
+    path: "/bandit",
+    component: () =>
+      import( "../views/Bandit.vue"),
+      meta: {
+        showHeader: true,
+        requiresAuth: true
+      },
+  },
+  {
     path: "/map",
     name: "map",
     props: true ,

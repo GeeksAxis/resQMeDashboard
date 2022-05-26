@@ -7,7 +7,7 @@
                         <v-card-text>
                             <div class="d-flex mb-4">
                                 <div class="primary--text">
-                                    Lorem ipsom
+                                    Activity
                                 </div>
                                 <v-spacer></v-spacer>
                                 <div>
@@ -20,11 +20,11 @@
                                     <v-avatar size="110" class="border  pa-4">
                                         <div>
                                             <div class="primary--text font-weight-bold text-body-1">
-                                                {{ item.time }}
+                                                {{ item.arr.length }}
                                             </div>
 
                                             <div>
-                                                seconds
+                                                {{ item.title }}
                                             </div>
                                         </div>
                                     </v-avatar>
@@ -41,7 +41,7 @@
                         <v-card-text>
                             <div class="d-flex mb-4">
                                 <div class="primary--text">
-                                    Lorem ipsom
+                                    Activity
                                 </div>
                                 <v-spacer></v-spacer>
                                 <div>
@@ -55,7 +55,7 @@
                                     <div class="d-flex align-center mt-4">
                                         <v-icon large>mdi-clock</v-icon>
                                         <div class="ml-2 text-h6">
-                                            {{ new Date() | moment(" h:mm:ss a",)}}
+                                            {{ new Date() | moment(" h:mm:ss a",) }}
                                         </div>
 
                                     </div>
@@ -66,7 +66,7 @@
                                     <div class="d-flex align-center mt-4">
                                         <v-icon large left>mdi-calendar</v-icon>
                                         <div class=" text-h6">
-                                         {{ new Date() | moment("ddd, MMMM YYYY")}}
+                                            {{ new Date() | moment("ddd, MMMM YYYY") }}
                                         </div>
 
                                     </div>
@@ -118,20 +118,20 @@
                                         Lorem ipsum dolor sit amet consectetur adipisicing elit <br> Fuga beatae earum
                                         reprehenderit debiti
                                     </div>
-                                     <div class="mt-2">
+                                    <div class="mt-2">
                                         Lorem ipsum dolor sit amet consectetur adipisicing elit <br> Fuga beatae earum
                                         reprehenderit debiti
                                     </div>
-                                     <div class="mt-2">
+                                    <div class="mt-2">
                                         Lorem ipsum dolor sit amet consectetur adipisicing elit <br> Fuga beatae earum
                                         reprehenderit debiti
                                     </div>
-                                    
+
                                 </v-card-text>
                             </v-card>
 
                         </v-col>
-                        
+
 
                         <v-col cols="12">
                             <v-card flat color="background">
@@ -140,11 +140,8 @@
                                         Lorem ipsum
                                     </div>
                                     <v-card dark>
-                                        <GChart type="ColumnChart"
-                                         :data="chartData" :options="chartOptions"
-                                         class="my_chat"
-                                         
-                                         />
+                                        <GChart type="ColumnChart" :data="chartData" :options="chartOptions"
+                                            class="my_chat" />
                                     </v-card>
 
                                 </v-card-text>
@@ -161,36 +158,37 @@
 
 <script>
 import { GChart } from 'vue-google-charts'
+import EmergencyService from "../Services/emergencyServices";
 
 export default {
     components: {
         GChart
     },
     data: () => ({
-         chartData: [
-        ['Year', 'Sales', 'Expenses', 'Profit'],
-        ['2019', 1000, 400, 200],
-        ['2020', 1170, 460, 250],
-        ['2021', 660, 1120, 300],
-        ['2022', 1030, 540, 350]
-      ],
-      chartOptions: {
-        chart: {
-          title: 'Company Performance',
-          subtitle: 'Sales, Expenses, and Profit: 2014-2017',
-        },
-          colors: ['#29A19C', '#64B5F6', '#ECEFF1', ],
+        chartData: [
+            ['Year', 'Sales', 'Expenses', 'Profit'],
+            ['2019', 1000, 400, 200],
+            ['2020', 1170, 460, 250],
+            ['2021', 660, 1120, 300],
+            ['2022', 1030, 540, 350]
+        ],
+        chartOptions: {
+            chart: {
+                title: 'Company Performance',
+                subtitle: 'Sales, Expenses, and Profit: 2014-2017',
+            },
+            colors: ['#29A19C', '#64B5F6', '#ECEFF1',],
 
-      },
+        },
         time: [
             {
-                time: '1002',
+                time: '1002', title: 'Bandits', arr: []
             },
             {
-                time: '1004',
+                time: '1004', title: 'Robbery', arr: [],
             },
             {
-                time: '1003',
+                time: '1003', title: 'Accident', arr: []
             },
         ],
         data: [
@@ -212,8 +210,55 @@ export default {
             {
                 numm: 6
             }
-        ]
-    })
+        ],
+        currentEmergency: null,
+        currentIndex: -1,
+    }),
+    mounted() {
+        EmergencyService.getAll().on("value", this.onDataChange);
+
+    },
+    methods: {
+        onDataChange(items) {
+            let _emergencies = [];
+            items.forEach((item) => {
+                let data = item.val();
+                if (data.reason === 'Road Accident') {
+                    this.time[2].arr.push(data);
+
+
+                }
+
+                if (data.reason === 'House Robbery') {
+                    this.time[1].arr.push(data);
+
+
+                }
+
+                if (data.reason === 'Bandits') {
+                    this.time[0].arr.push(data);
+
+
+                }
+
+
+            });
+
+            this.ResqMeItems = _emergencies;
+        },
+        setActiveEmergency(_emergencies, index) {
+            this.currentEmergency = this.ResqMeItems;
+            this.currentIndex = index;
+        },
+        refreshList() {
+            this.currentEmergency = null;
+            this.currentIndex = -1;
+        },
+    },
+
+    beforeDestroy() {
+        EmergencyService.getAll().off("value", this.onDataChange);
+    },
 
 }
 </script>
@@ -232,6 +277,7 @@ export default {
     border-radius: 10px;
     border: 1px solid rgba(249, 249, 249, 0.2);
 }
+
 .my_chat {
     background: #29A19C !important;
 }

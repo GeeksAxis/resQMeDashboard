@@ -83,6 +83,7 @@ export default {
     ],
     issues: [
       { icon: "mdi-car", text: "Accident", route: "/accident" },
+      { icon: "mdi-account-group", text: "Bandits", route: "/bandit" },
       { icon: "mdi-car-brake-alert", text: "Robbery", route: "/robbery" },
 
       { icon: "mdi-fire-circle", text: "Fire", route: "/fire" },
